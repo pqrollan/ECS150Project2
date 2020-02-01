@@ -16,11 +16,13 @@ struct queue {
 //Does the result of queue_create count as an empty queue?
 queue_t queue_create(void)
 {
+	printf("making space\n");
 	queue_t q =  (queue_t)malloc(sizeof(struct queue));
 	q->height = 0;
 	q->data = NULL;
 	q->first = NULL;
 	q->next = NULL;
+	printf("new queue created\n");
 	return q;
 }
 
@@ -31,34 +33,47 @@ int queue_destroy(queue_t queue){
 	free(queue);
 	queue = NULL;
 	if (queue== NULL){
-		printf("working queue\n");
+	// 	printf("working queue\n");
+		printf("queue destroyed\n");
+
 	}
 	return 0;
 }
 
 int queue_enqueue(queue_t queue, void *data)
 {
+	printf("enqueue before test\n");
 	if (queue == NULL || data == NULL){
 		return -1;
 	}
+	printf("enqueue start \n");
 
-	queue_t temp = NULL;
+	queue_t temp = queue_create();
 	if (queue->height==0){
+		printf("Queue's height is 0\n");
 		queue->data = data;
 		queue->height = 1;
 		queue->first = queue;
+		printf("first queue item assigned\n");
 	}
 	else{
-		temp = queue_create();
+		printf("Queue's height is %d\n", queue->height);
+		printf("new queue height SHOULD BE %d\n", queue->height + 1);
+		// temp = queue_create();
 		if (temp == NULL){
 			return -1;
 		}
+		printf("after temp made %d\n", queue->height + 1);
 		temp->data = data;
-		temp->height= queue->height++;
+		(*temp).height= (*queue).height;
 		temp->first = queue->first;
 		temp->next = NULL;
 		queue->next = temp;
-		queue = temp;
+		(*queue) = (*temp);
+		queue->height = queue->height+ 1;
+		printf("the NEW Queue's height is %d\n", queue->height);
+		
+		printf("queue item added\n");
 	}
 	
 	return 0;
@@ -79,12 +94,17 @@ int queue_dequeue(queue_t queue, void **data)
 	}
 	else{
 		queue_t temp = queue->first;
-		queue->first = temp->next;
+		printf("temp is assigned\n");
+		queue->first = queue->first->next;
+		printf("queue first is assigned\n");
 		*data = temp->data;
-		queue->height--;
+		printf("data is assigned\n");
+		queue->height = queue->height - 1;
+		printf("height is reassigned\n");
 		free(temp);
 		temp = NULL;
 	}
+	printf("item dequeued\n");
 	return 0;
 	
 }
@@ -106,6 +126,7 @@ int queue_delete(queue_t queue, void *data)
 			temp->height = queue->height;
 			temp->first = queue->first;
 			free(toDelete);
+			printf("item deleted\n");
 			return 0;
 		}
 		temp=temp->next;
@@ -127,10 +148,12 @@ int queue_iterate(queue_t queue, queue_func_t func, void *arg, void **data)
 			if (*data != NULL){
 				*data = temp->data;
 			}
+			printf("item found, iteration stops\n");
 			break;
 		}
 		temp=temp->next;
 	}
+	printf("iteration complete\n");
 	return 0;
 }
 
@@ -139,6 +162,8 @@ int queue_length(queue_t queue)
 	if (queue == NULL){
 		return -1;
 	}
-	return queue->height;
+	printf("height = %d\n", queue->height);
+	printf("about to return height:\n");
+	return (queue->height);
 }
 
