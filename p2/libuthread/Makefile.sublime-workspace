@@ -1,0 +1,324 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"a",
+				"argumentNum\tabc"
+			],
+			[
+				"Wai",
+				"WaitGroup\t(bug2.go)"
+			],
+			[
+				"monica",
+				"monicaBooks"
+			],
+			[
+				"ro",
+				"rossBooks"
+			],
+			[
+				"pho",
+				"phoebesBooks"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package",
+				"Package Control: Install Package"
+			],
+			[
+				"color",
+				"UI: Select Color Scheme"
+			],
+			[
+				"colo",
+				"UI: Select Color Scheme"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"Color",
+				"UI: Select Color Scheme"
+			],
+			[
+				"extract",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"UI",
+				"UI: Select Color Scheme"
+			],
+			[
+				"extract p",
+				"PackageResourceViewer: Extract Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"Pa",
+				"Package Control: Install Package"
+			],
+			[
+				"Pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"Inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: List",
+				"Package Control: Install Package"
+			],
+			[
+				"Go",
+				"Set Syntax: Go"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 136.0,
+		"history":
+		[
+			"go test -cover",
+			"pwd"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/ml-100k/u.data",
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/ml-100k/u.item",
+		"/Users/ashwinmuralidharan/ECS189G/hw1Final/ProblemA.r",
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/ml-100k/u.genre",
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/ml-100k/README",
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/ml-100k/u.info",
+		"/Users/ashwinmuralidharan/ECS189G/hw1Final/ProblemBdan.r",
+		"/Users/ashwinmuralidharan/ECS189G/hw1Final/ProblemB.R",
+		"/Users/ashwinmuralidharan/R_packages/covtype.info",
+		"/Users/ashwinmuralidharan/R_packages/covtype.data",
+		"/Users/ashwinmuralidharan/ECS189G/omsi-master/turkiye-student-evaluation_R_Specific.csv",
+		"/Users/ashwinmuralidharan/Downloads/covtype.info",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project2/p2/libuthread/context.c",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project2/p2/libuthread/preempt.c",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project2/p2/libuthread/uthread.c",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project2/p2/libuthread/queue.c",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project2/p2/libuthread/queue.h",
+		"/Users/ashwinmuralidharan/ECS150/ECS150Project1/sshell.c",
+		"/Users/ashwinmuralidharan/ECS150/Project1/sshell.c",
+		"/Users/ashwinmuralidharan/ECS 189E/project-f19-recipeapp/Recipe App/Recipe App/Base.lproj/Main.storyboard",
+		"/Users/ashwinmuralidharan/Downloads/java-client/src\\test\\java\\com\\spoonacular\\DefaultApiTest.java",
+		"/Users/ashwinmuralidharan/Downloads/java-client/src\\test\\java\\com\\spoonacular\\client\\model\\InlineObject1Test.java",
+		"/Users/ashwinmuralidharan/Downloads/java-client/src\\main\\java\\com\\spoonacular\\client\\auth\\ApiKeyAuth.java",
+		"/Users/ashwinmuralidharan/Downloads/java-client/src\\main\\java\\com\\spoonacular\\client\\auth\\Authentication.java",
+		"/Users/ashwinmuralidharan/Downloads/java-client/src\\main\\java\\com\\spoonacular\\client\\ApiClient.java",
+		"/Users/ashwinmuralidharan/ECS189E/homework-1-f19-ashwinmd/README.md",
+		"/Users/ashwinmuralidharan/Dropbox/workspaceAPCS/A3_1Easter/Easter.java",
+		"/Users/ashwinmuralidharan/Dropbox/workspaceAPCS/APCSElevensActivity1/CardTester.java",
+		"/Users/ashwinmuralidharan/Dropbox/workspaceAPCS/APCSElevensActivity1/Card.java",
+		"/Users/ashwinmuralidharan/CourseraCourses/HTML_CSS_Javascript/test_site/index.html",
+		"/Users/ashwinmuralidharan/CourseraCourses/HTML_CSS_Javascript/test_site/untitled",
+		"/Users/ashwinmuralidharan/Downloads/smash.go",
+		"/Users/ashwinmuralidharan/Downloads/hw4-code/smash/smash.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/set/set.pl",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/nfa/nfa_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/nfa/nfa_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/nfa/nfa.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/nfa/nfa.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/nfa/nfacopy.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/smash/smash.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/smash/smash_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/bug2/bug2.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/bug1/bug1_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW4/hw4-code/bug1/bug1.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/nfa/transitions.pl",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/nfa/nfa.plt",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/nfa/nfa.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/nfa/nfa.pl",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/query/query.plt",
+		"/Users/ashwinmuralidharan/ECS 140A/HW3/hw3-code/query/query.pl",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/matrix/matrix_test.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/matrix/matrix.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/nfa/nfa_test.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/match/match.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/match/match_test.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW2/hw2-code/mmm/mmm.lisp",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/rewrite_tests/test8_in.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/rewrite_tests/test8_out.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/rewrite/rewrite.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/rewrite/rewrite_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/depth/depth.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/simplify/simplify.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/rewrite_tests/test1_in.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/branch/branch.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/branch/branch_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/simplify/simplify_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/expr/eval.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/expr/ast.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/depth/depth_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/expr/coverage_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/expr/check.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/min/min.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/min/min_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-code/triangle/triangle_test.go",
+		"/Users/ashwinmuralidharan/ECS 140A/HW1/hw1-handout/triangle/triangle_test.go",
+		"/Users/ashwinmuralidharan/Library/Application Support/Sublime Text 3/Packages/Terminal/Terminal.sublime-settings",
+		"/Users/ashwinmuralidharan/CLionProjects/ECS40/VectorExtraCredit/VectorItr.h"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Makefile.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 50.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 2
+	}
+}

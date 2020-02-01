@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "queue.h"
 
@@ -15,7 +16,7 @@ struct queue {
 //Does the result of queue_create count as an empty queue?
 queue_t queue_create(void)
 {
-	queue_t q =  (queue_t)malloc(sizeof(queue));
+	queue_t q =  (queue_t)malloc(sizeof(struct queue));
 	q->height = 0;
 	q->data = NULL;
 	q->first = NULL;
@@ -23,58 +24,121 @@ queue_t queue_create(void)
 	return q;
 }
 
-int queue_destroy(queue_t queue)
-{
+int queue_destroy(queue_t queue){
+	if (queue == NULL || queue_length(queue) > 0){
+		return -1;
+	}
+	free(queue);
 	queue = NULL;
+	if (queue== NULL){
+		printf("working queue\n");
+	}
+	return 0;
 }
 
 int queue_enqueue(queue_t queue, void *data)
 {
-	/* TODO Phase 1 */
-	queue_t temp = queue_create();
-	temp->data = data
-	queue->next = temp
-	temp->height= queue->height++;
-	temp->first = queue->first;
-	temp->next = NULL;
-	queue = temp;
+	if (queue == NULL || data == NULL){
+		return -1;
+	}
+
+	queue_t temp = NULL;
+	if (queue->height==0){
+		queue->data = data;
+		queue->height = 1;
+		queue->first = queue;
+	}
+	else{
+		temp = queue_create();
+		if (temp == NULL){
+			return -1;
+		}
+		temp->data = data;
+		temp->height= queue->height++;
+		temp->first = queue->first;
+		temp->next = NULL;
+		queue->next = temp;
+		queue = temp;
+	}
+	
+	return 0;
 
 }
 
 int queue_dequeue(queue_t queue, void **data)
 {
-	/* TODO Phase 1 */
-	if queue->first != NULL{
-		temp = queue->first;
+	if (queue == NULL || data == NULL || queue->height == 0){
+		return -1;
+	}
+	if (queue->height == 1){
+		*data = queue->data;
+		queue->height = 0;
+		queue->data = NULL;
+		queue->first = NULL;
+		queue->next = NULL;
+	}
+	else{
+		queue_t temp = queue->first;
 		queue->first = temp->next;
-		*data = temp->data
+		*data = temp->data;
 		queue->height--;
 		free(temp);
 		temp = NULL;
 	}
-
+	return 0;
 	
 }
 
 int queue_delete(queue_t queue, void *data)
 {
-	queue_t temp= queue->first;
-	for (int i = 0; i< queue.length(); i++){ 
-		
-		i--;
-		
+	if (queue == NULL || data == NULL){
+		return -1;
 	}
+	queue_t temp= queue->first;
+	if(temp->data == data){
+		return queue_dequeue(queue, NULL);
+	}
+	for (int i = 0; i < queue_length(queue)-1; i++){ 
+		if (temp->next->data == data){
+			queue_t toDelete = temp->next;
+			temp->next = temp->next->next;
+			queue->height--;
+			temp->height = queue->height;
+			temp->first = queue->first;
+			free(toDelete);
+			return 0;
+		}
+		temp=temp->next;
+	}
+	return -1;
 	
 }
 
 int queue_iterate(queue_t queue, queue_func_t func, void *arg, void **data)
 {
-	/* TODO Phase 1 */
+	if (queue == NULL || data == NULL){
+		return -1;
+	}
+
+	queue_t temp= queue->first;
+	for (int i = 0; i < queue_length(queue); i++){ 
+		int returned = func(temp->data, arg);
+		if (returned == 1){
+			if (*data != NULL){
+				*data = temp->data;
+			}
+			break;
+		}
+		temp=temp->next;
+	}
+	return 0;
 }
 
 int queue_length(queue_t queue)
 {
-	/* TODO Phase 1 */
-	return queue->length;
+	if (queue == NULL){
+		return -1;
+	}
+	return queue->height;
 }
 

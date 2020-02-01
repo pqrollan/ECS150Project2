@@ -1,6 +1,9 @@
 #ifndef _QUEUE_H
 #define _QUEUE_H
 
+
+
+
 /*
  * queue_t - Queue type
  *
@@ -11,6 +14,15 @@
  * Apart from delete and iterate operations, all operations should be O(1).
  */
 typedef struct queue* queue_t;
+
+
+// struct queue {
+// 	/* TODO Phase 1 */
+// 	queue_t next;
+// 	int height;
+// 	void* data;
+// 	queue_t first;
+// };
 
 /*
  * queue_create - Allocate an empty queue
