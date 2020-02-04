@@ -11,6 +11,18 @@
 #include "queue.h"
 #include "uthread.h"
 
+
+enum uthread_State {RUNNING, READY, BLOCKED, ZOMBIE};
+
+
+struct TCB {
+	uthread_t tid;
+	uthread_ctx_t context;
+	void* stack;
+	uthread_State state;
+
+}
+
 /* TODO Phase 2 */
 
 void uthread_yield(void)

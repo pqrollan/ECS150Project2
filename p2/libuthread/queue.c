@@ -70,6 +70,7 @@ int queue_enqueue(queue_t queue, void *data)
 		temp->next = NULL;
 		queue->next = temp;
 		queue = temp;
+		//(*queue) =(*temp);
 		queue->height = queue->height+ 1;
 		printf("the NEW Queue's height is %d\n", queue->height);
 		
@@ -95,6 +96,14 @@ int queue_dequeue(queue_t queue, void **data)
 	else{
 		queue_t temp = queue->first;
 		printf("temp is assigned\n");
+
+
+		/*
+
+			this is where things would seg fault
+
+		*/
+		
 		queue->first = queue->first->next;
 		printf("queue first is assigned\n");
 		*data = temp->data;
