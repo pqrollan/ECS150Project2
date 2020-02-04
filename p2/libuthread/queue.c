@@ -65,11 +65,11 @@ int queue_enqueue(queue_t queue, void *data)
 		}
 		printf("after temp made %d\n", queue->height + 1);
 		temp->data = data;
-		(*temp).height= (*queue).height;
+		temp->height= queue->height;
 		temp->first = queue->first;
 		temp->next = NULL;
 		queue->next = temp;
-		(*queue) = (*temp);
+		queue = temp;
 		queue->height = queue->height+ 1;
 		printf("the NEW Queue's height is %d\n", queue->height);
 		

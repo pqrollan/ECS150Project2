@@ -4,7 +4,7 @@ lib := libuthread.a
 all: libuthread $(lib)
 
 libuthread.a: test_queue.o queue.o
-	gcc -Wall -Werror -Wextra -o libuthread test_queue.o queue.o
+	gcc -Wall -Werror -Wextra -o libuthread.a test_queue.o queue.o
 
 test_queue.o: test_queue.c queue.h
 	gcc -Wall -Werror -Wextra -c -o test_queue.o test_queue.c
