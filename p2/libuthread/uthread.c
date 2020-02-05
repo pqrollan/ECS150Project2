@@ -14,7 +14,7 @@
 #include "uthread.h"
 
 
-enum uthread_State {RUNNING, READY, BLOCKED, ZOMBIE};
+enum uthread_State {RUNNING, READY, ZOMBIE};
 
 int tid_count=0;
 queue_t readyQueue;
@@ -34,15 +34,25 @@ struct TCB runningThread;
 
 /* TODO Phase 2 */
 
-// void uthread_yield(void)
-// {
-// 	/* TODO Phase 2 */
-// }
+void uthread_yield(void)
+{
+	/*
+	uthread_ctx_t c;
+	void* s = NULL;
+	struct TCB temp= {5, s, c, RUNNING };
+	struct TCB *temp_point= &temp;
+	*/
+	struct TCB* temp;
+	queue_dequeue(readyQueue, (void**) &temp);
+	queue_enqueue(readyQueue, &runningThread);
+	uthread_ctx_switch(&runningThread.context, &temp->context);
+	runningThread = (*temp); 
+}
 
-// uthread_t uthread_self(void)
-// {
-// 	/* TODO Phase 2 */
-// }
+uthread_t uthread_self(void)
+{
+	return runningThread.tid;
+}
 
 int uthread_create(uthread_func_t func, void *arg)
 {
@@ -69,14 +79,24 @@ int uthread_create(uthread_func_t func, void *arg)
 	
 }
 
-// void uthread_exit(int retval)
-// {
-// 	/* TODO Phase 2 */
-// }
+void uthread_exit(int retval)
+{
+	/* TODO Phase 2 */
+	retval = 0;
+	retval = retval + 1;
+}
+
 
 // int uthread_join(uthread_t tid, int *retval)
 // {
-// 	/* TODO Phase 2 */
-// 	/* TODO Phase 3 */
+//  	 TODO Phase 2 
+// 	struct TCB* temp;
+// 	queue_dequeue(readyQueue, (void**) &temp);
+// 	queue_enqueue(readyQueue, &runningThread);
+// 	uthread_ctx_switch(&runningThread.context, &temp->context);
+// 	runningThread = (*temp); 
+	
+//  	/* TODO Phase 3 */
+//  	return 0;
 // }
 
