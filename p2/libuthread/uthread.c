@@ -1,3 +1,4 @@
+
 #include <assert.h>
 #include <signal.h>
 #include <stddef.h>
@@ -29,7 +30,7 @@ struct TCB {
 
 };
 
-struct TCB mainThread;
+struct TCB runningThread;
 
 /* TODO Phase 2 */
 
@@ -52,18 +53,19 @@ int uthread_create(uthread_func_t func, void *arg)
 		if(tid_count == 0){
 			uthread_ctx_switch(&c, &c);
 			struct TCB t = {0, s, c, RUNNING };
-			mainThread = t;
+			runningThread = t;
 			readyQueue = queue_create();
 			blockedQueue = queue_create();
-			//Enqueue to Running queue
+			return runningThread.tid;
 		}
 		else{
 			uthread_ctx_init(&c, s, func, arg);
 			struct TCB thread = {tid_count++, s, c, READY };
 			queue_enqueue(readyQueue, &thread);
-			//Enqueue to Ready queue
+			return thread.tid;
 		}
 	}
+	return -1;
 	
 }
 
