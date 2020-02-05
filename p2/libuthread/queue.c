@@ -150,7 +150,6 @@ int queue_length(queue_t queue)
 		return -1;
 	}
 	printf("height = %d\n", queue->height);
-	//printf("about to return height:\n");
 	return (queue->height);
 }
 
