@@ -50,9 +50,9 @@ int queue_enqueue(queue_t queue, void *data)
 	if (queue == NULL || data == NULL){
 		return -1;
 	}
-
-	struct node* temp = (struct node*)malloc(sizeof(struct node));
-
+	
+	struct node* temp = (struct node*) malloc(sizeof(struct node));
+	printf("space made in enqueue\n");
 	temp->data = data;
 	temp->prev = queue->last;
 	temp->next = NULL;
@@ -64,6 +64,7 @@ int queue_enqueue(queue_t queue, void *data)
 	else{
 		temp->prev->next = temp;
 	}
+	printf("node added to queue\n");
 	
 	return 0;
 
