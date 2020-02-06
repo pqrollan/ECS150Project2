@@ -38,9 +38,6 @@ int queue_destroy(queue_t queue){
 	}
 	free(queue);
 	queue = NULL;
-	if (queue== NULL){
-		printf("queue destroyed\n");
-	}
 	return 0;
 }
 
@@ -52,7 +49,6 @@ int queue_enqueue(queue_t queue, void *data)
 	}
 	
 	struct node* temp = (struct node*) malloc(sizeof(struct node));
-	printf("space made in enqueue\n");
 	temp->data = data;
 	temp->prev = queue->last;
 	temp->next = NULL;
@@ -64,7 +60,6 @@ int queue_enqueue(queue_t queue, void *data)
 	else{
 		temp->prev->next = temp;
 	}
-	printf("node added to queue\n");
 	
 	return 0;
 
@@ -136,12 +131,10 @@ int queue_iterate(queue_t queue, queue_func_t func, void *arg, void **data)
 			if (data != NULL){
 				*data = temp->data;
 			}
-			printf("item found, iteration stops\n");
 			break;
 		}
 		temp=temp->next;
 	}
-	printf("iteration complete\n");
 	return 0;
 }
 
@@ -150,7 +143,6 @@ int queue_length(queue_t queue)
 	if (queue == NULL){
 		return -1;
 	}
-	printf("height = %d\n", queue->height);
 	return (queue->height);
 }
 

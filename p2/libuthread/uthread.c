@@ -30,6 +30,7 @@ struct TCB {
 	uthread_ctx_t* context;
 	enum uthread_State state;
 	int retval;
+	uthread_t dependent;
 
 };
 
@@ -46,16 +47,9 @@ void uthread_yield(void)
 	//struct TCB* curr_context = (struct TCB*) malloc (sizeof(struct TCB));
 	uthread_t runningThreadTid = runningThread->tid;
 
-	if (runningThread){
-		printf("Running thread id = %hu\n", runningThread->tid);
-	}
 	queue_enqueue(readyQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
 	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
-	printf("enqueue dequeue success\n");
-	runningThread = next_thread;
-	printf("Running thread id = %hu\n", runningThread->tid);
-	printf("entering context switch\n");
-	
+	runningThread = next_thread;	
 	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
 	 //Switch the running thread
 }
@@ -65,16 +59,10 @@ static void uthread_join_yield(void)
 	struct TCB* next_thread = (struct TCB*) malloc (sizeof(struct TCB));
 	//struct TCB* curr_context = (struct TCB*) malloc (sizeof(struct TCB));
 	uthread_t runningThreadTid = runningThread->tid;
-
-	if (runningThread){
-		printf("Running thread id = %hu\n", runningThread->tid);
-	}
+	tcbArray[runningThreadTid]->state= BLOCKED;
 	queue_enqueue(blockedQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
 	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
-	printf("enqueue dequeue success\n");
 	runningThread = next_thread;
-	printf("Running thread id = %hu\n", runningThread->tid);
-	printf("entering context switch\n");
 	
 	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
 	 //Switch the running thread
@@ -89,30 +77,25 @@ int uthread_create(uthread_func_t func, void *arg)
 {
 	if(tid_count < USHRT_MAX){
 		//If main:
-		printf("Create_thread start\n");
 		uthread_ctx_t* c = (uthread_ctx_t*)malloc(sizeof(uthread_ctx_t));
 		void* s = uthread_ctx_alloc_stack();
 		struct TCB* t = (struct TCB*) malloc (sizeof(struct TCB));
 
 		
 		if(tid_count == 0){
-			printf("Creating main thread\n");
 			uthread_ctx_t* c_main = (uthread_ctx_t*)malloc(sizeof(uthread_ctx_t));
 			void* s_main = uthread_ctx_alloc_stack();
 			runningThread = (struct TCB*) malloc (sizeof(struct TCB));
-			printf("space allocated in main\n");
 			uthread_ctx_switch(c_main, c_main);
-			*runningThread = (struct TCB){0, s_main, c_main, RUNNING, -1};
+			*runningThread = (struct TCB){0, s_main, c_main, RUNNING, -1, 0};
 
 			readyQueue = queue_create();
 			blockedQueue = queue_create();
 			tcbArray[tid_count]= runningThread;
 			tid_count++;
 		}
-
-		printf("Creating a new thread\n");
 		uthread_ctx_init(c, s, func, arg);
-		struct TCB temp= {tid_count, s, c, READY, -1};
+		struct TCB temp= {tid_count, s, c, READY, -1, 0};
 		*t = temp;
 		queue_enqueue(readyQueue, t);
 		tcbArray[tid_count]= t;
@@ -123,9 +106,9 @@ int uthread_create(uthread_func_t func, void *arg)
 	return -1;
 }
 
+
 void uthread_exit(int retval)
 {
-	printf("Entered uthread_exit\n");
 	struct TCB* next_thread;
 	//Set the runningg thread's return value to retval
 	runningThread->retval = retval;
@@ -134,15 +117,19 @@ void uthread_exit(int retval)
 	//Switch to the next ready thread
 	uthread_t runningThreadTid = runningThread->tid;
 
+	if(runningThread->dependent!=0){
+		tcbArray[runningThread->dependent]->state = READY;
+		queue_enqueue(readyQueue, tcbArray[runningThread->dependent]);
+		queue_delete(blockedQueue, tcbArray[runningThread->dependent]);
+	}
+
 	if (queue_length(readyQueue)>0){
-		printf("switching to ready thread \n");
 		queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
 		runningThread = next_thread; //Switch the running thread
 		uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context); //Switch the contexts
 		
 	}
 	else{
-		printf("No more ready threads to switch to\n");
 		runningThread = tcbArray[0]; 
 		uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context);
 	}
@@ -152,38 +139,7 @@ void uthread_exit(int retval)
 
 int uthread_join(uthread_t tid, int *retval)
 {
-	/* Phase 2 */
- 	//while true:
- 	//	if the ready queue is empty, break
- 	//	else, call uthread_yield
-
- 	//At end, call queue_destroy
-
-	if (tid == 0){
-		return -1;
-	}
-	if (retval){
-		printf("retval not null\n");
-	}
-
- 	while(1 == 1){
- 		if (queue_length(readyQueue) == 0){
- 			printf("Ready to break out\n");
- 			break;
- 		}
- 		else{
-			printf("We are yeilding\n");
- 			uthread_yield();
- 			/*
-				get tid, get retval, free tcb with tid 
- 			*/
- 		}
- 	}
- 	printf("attempting to destroy\n");
- 	queue_destroy(readyQueue);
-
-
- 	/*
+	 	/*
  		if tcbArray[tid].state == ZOMBIE:
 			retval = tcbArray[tid]->retval
 			deallac stack 
@@ -199,6 +155,60 @@ int uthread_join(uthread_t tid, int *retval)
  	*/
 	
  	/* TODO Phase 3 */
+	if (tid == 0){
+		return -1;
+	}
+
+	if (tcbArray[tid]->state!= ZOMBIE){
+		tcbArray[tid]->dependent= runningThread->tid;
+		uthread_join_yield();
+	}
+
+	if(retval){
+		*retval = tcbArray[tid]->retval;
+	}
+ 	
+	free(tcbArray[tid]->context);
+	uthread_ctx_destroy_stack(tcbArray[tid]->stack);
+	free(tcbArray[tid]);
+
+	if (runningThread->tid==0){
+ 		queue_destroy(readyQueue);
+	}
+ 	
+
+
+
+	/* 	PHASE 2*/
+
+
+
+ 	//while true:
+ 	//	if the ready queue is empty, break
+ 	//	else, call uthread_yield
+
+ 	//At end, call queue_destroy
+
+	// if (tid == 0){
+	// 	return -1;
+	// }
+	// if (retval){
+	// 	printf("retval not null\n");
+	// }
+
+ // 	while(1 == 1){
+ // 		if (queue_length(readyQueue) == 0){
+ // 			break;
+ // 		}
+ // 		else{
+ // 			uthread_join_yield();
+ // 			/*
+	// 			get tid, get retval, free tcb with tid 
+ // 			*/
+ // 		}
+ // 	}
+ // 	printf("destroy ready, program ends\n");
+ // 	queue_destroy(readyQueue);
  	return 0;
 }
 
