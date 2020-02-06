@@ -112,7 +112,7 @@ int uthread_create(uthread_func_t func, void *arg)
 void uthread_exit(int retval)
 {
 	struct TCB* next_thread;
-	//Set the runningg thread's return value to retval
+	//Set the running thread's return value to retval
 	runningThread->retval = retval;
 	//Set the status of the thread to terminated
 	runningThread->state = ZOMBIE;
@@ -148,21 +148,25 @@ void uthread_exit(int retval)
 int uthread_join(uthread_t tid, int *retval)
 {
 	
- 	/* TODO Phase 3 */
+ 	//Ensure that the thread can be joined
 	if (tid == 0 || tid == runningThread->tid ||
 		tcbArray[tid] == NULL || tcbArray[tid]->dependent!=0){
 		return -1;
 	}
 
+	//If the thread to be joined is still active, the running thread is now blocked.
 	if (tcbArray[tid]->state!= ZOMBIE){
 		tcbArray[tid]->dependent= runningThread->tid;
 		uthread_join_yield();
 	}
 
+
+	//Populate retval with the return value, if it exists
 	if(retval){
 		*retval = tcbArray[tid]->retval;
 	}
  	
+ 	//Once the thread is joined, free its dynamically allocated memory
 	free(tcbArray[tid]->context);
 	uthread_ctx_destroy_stack(tcbArray[tid]->stack);
 	free(tcbArray[tid]);

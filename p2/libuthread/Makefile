@@ -1,27 +1,27 @@
 # Target library
 
+
+objs := uthread.o context.o preempt.o queue.o
+
+CC := gcc
+CFLAGS := -Wall -Wextra -Werror -g -c -o
+
 all: libuthread.a
 
-#libuthread: libuthread uthread.c uthread.h context.c context.h preempt.c preempt.h test_queue.c queue.c queue.h
-#	gcc -Wall -Werror -Wextra -o libuthread.a uthread.c uthread.h context.c context.h preempt.c preempt.h test_queue.c queue.c queue.h
-libuthread.a: uthread.o context.o preempt.o queue.o
+deps := $(patsubst %.o,%.d,$(objs))
+-include $(deps)
+DEPFLAGS = -MMD -MF $(@:.o=.d)
+
+libuthread.a: $(objs)
 	ar rcs $@ $^
 	ranlib $@
 
-uthread.o: uthread.c uthread.h context.h preempt.h queue.h
-	gcc -Wall -Werror -Wextra -c -o uthread.o uthread.c
-
-context.o: context.c context.h preempt.h uthread.h
-	gcc -Wall -Werror -Wextra -c -o context.o context.c 
-
-preempt.o: preempt.c preempt.h uthread.h
-	gcc -Wall -Werror -Wextra -c -o preempt.o preempt.c
-
-queue.o: queue.c queue.h
-	gcc -Wall -Werror -Wextra -c -o queue.o queue.c
+%.o: %.c
+	@echo "CC $@ $^"
+	$(CC) $(CFLAGS) $@ $< $(DEPFLAGS)
 
 clean:    
-	rm -f libuthread.a uthread.o context.o preempt.o test_queue.o queue.o
+	rm -f libuthread.a $(objs) $(deps)
 
 
 ## TODO: Phase 1.1
