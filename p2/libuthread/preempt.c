@@ -15,50 +15,44 @@
  */
 #define HZ 100
 
-bool signal_enabled = true;
+struct sigaction sa;
+struct itimerval timer;
 
 static void handler(){
-	// if(signal_enabled){
-	// 	uthread_yield();
-	// }
-	printf("handler fired\n");
+	printf("handler ----------------------------------------- fired\n");
+	uthread_yield();
+	
 }
 
 void preempt_disable(void)
 {
 	/* TODO Phase 4 */
-	signal_enabled = false;
+	//sigprocmask (SIG_BLOCK, &sa, NULL);
 }
 
 void preempt_enable(void)
 {
 	/* TODO Phase 4 */
-	signal_enabled = true;
-
+	//sigprocmask (SIG_UNBLOCK, &sa, NULL);
 }
 
 void preempt_start(void)
 {
 	/* TODO Phase 4 */
-	signal(SIGVTALRM, handler);
 
-	// //Set up timer
-	// while(true){
-		
+	sigemptyset (&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = &handler;
 
-	// }
-	struct sigaction sa;
-	sa.sa_handler = handler;
-	// sa.sa_mask = 0;
-	// sa.sa_flags = 0;
-	sigaction(SIGALRM, &sa, NULL);
+	if (sigaction(SIGVTALRM, &sa, NULL)==-1){
+		printf("error with sig action");
+	}
 
-	struct itimerval timer;
 	timer.it_value.tv_sec = 0;
 	timer.it_value.tv_usec = 10000;
 	timer.it_interval.tv_sec = 0;
-	timer.it_interval.tv_usec = 100000;
-	setitimer(ITIMER_REAL, &timer, NULL);
+	timer.it_interval.tv_usec = 10000;
+	setitimer(ITIMER_VIRTUAL, &timer, NULL);
 
 	// while(1){
 	// 	pause();
