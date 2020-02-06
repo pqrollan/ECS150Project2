@@ -15,6 +15,8 @@
  */
 #define HZ 100
 
+static void handler()
+
 void preempt_disable(void)
 {
 	/* TODO Phase 4 */
@@ -29,4 +31,5 @@ void preempt_start(void)
 {
 	/* TODO Phase 4 */
 }
+
 

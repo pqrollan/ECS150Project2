@@ -145,27 +145,13 @@ void uthread_exit(int retval)
 
 int uthread_join(uthread_t tid, int *retval)
 {
-	 	/*
- 		if tcbArray[tid].state == ZOMBIE:
-			retval = tcbArray[tid]->retval
-			deallac stack 
-			dealloc context 
-			free (tcbArray[tid])
-
- 		if tcbArray[tid].state == READY:
- 			Enqueue the running thread to the blocked queue
- 			Context switch to T2.
-
-
- 		if T2 is dead:
- 	*/
 	
  	/* TODO Phase 3 */
 	if (tid == 0 || tid == runningThread->tid ||
 		tcbArray[tid] == NULL || tcbArray[tid]->dependent!=0){
 		return -1;
 	}
-	
+
 	if (tcbArray[tid]->state!= ZOMBIE){
 		tcbArray[tid]->dependent= runningThread->tid;
 		uthread_join_yield();
@@ -181,36 +167,6 @@ int uthread_join(uthread_t tid, int *retval)
 	tcbArray[tid]= NULL;
 
 
-	/* 	PHASE 2*/
-
-
-
- 	//while true:
- 	//	if the ready queue is empty, break
- 	//	else, call uthread_yield
-
- 	//At end, call queue_destroy
-
-	// if (tid == 0){
-	// 	return -1;
-	// }
-	// if (retval){
-	// 	printf("retval not null\n");
-	// }
-
- // 	while(1 == 1){
- // 		if (queue_length(readyQueue) == 0){
- // 			break;
- // 		}
- // 		else{
- // 			uthread_join_yield();
- // 			/*
-	// 			get tid, get retval, free tcb with tid 
- // 			*/
- // 		}
- // 	}
- // 	printf("destroy ready, program ends\n");
- // 	queue_destroy(readyQueue);
  	return 0;
 }
 

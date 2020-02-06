@@ -53,17 +53,19 @@ int join_inf(void* arg)
 
 int join_same(void* arg)
 {
-	printf("tid supposedly shared is %hu\n", *((uthread_t*) arg));
 	if(uthread_join(*((uthread_t*) arg), NULL)==-1){
-		printf("fail to join\n");
 		return -2;
 	}
 	else{
-		printf("join success\n");
 		return 0;
 	}
 	
-	
+}
+
+int yieldWithOnlyOneThread(void* arg){
+	uthread_yield();
+	uthread_yield();
+	return -1;
 }
 
 int main(void)
@@ -103,6 +105,11 @@ int main(void)
 	retval = 0;
 	uthread_join(tid_2, &retval);
 	assert(retval == -2);
+
+	tid_2 = uthread_create(yieldWithOnlyOneThread, NULL);
+	retval = 0;
+	uthread_join(tid_2, &retval);
+	assert(retval == -1);
 
 	printf("Passes tests\n");
 
