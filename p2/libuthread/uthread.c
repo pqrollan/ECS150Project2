@@ -47,7 +47,26 @@ void uthread_yield(void)
 	uthread_t runningThreadTid = runningThread->tid;
 
 	if (runningThread){
-		printf("running thread is not null\n");
+		printf("Running thread id = %hu\n", runningThread->tid);
+	}
+	queue_enqueue(readyQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
+	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
+	printf("enqueue dequeue success\n");
+	runningThread = next_thread;
+	printf("Running thread id = %hu\n", runningThread->tid);
+	printf("entering context switch\n");
+	
+	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
+	 //Switch the running thread
+}
+
+static void uthread_join_yield(void)
+{
+	struct TCB* next_thread = (struct TCB*) malloc (sizeof(struct TCB));
+	//struct TCB* curr_context = (struct TCB*) malloc (sizeof(struct TCB));
+	uthread_t runningThreadTid = runningThread->tid;
+
+	if (runningThread){
 		printf("Running thread id = %hu\n", runningThread->tid);
 	}
 	queue_enqueue(blockedQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
@@ -56,10 +75,6 @@ void uthread_yield(void)
 	runningThread = next_thread;
 	printf("Running thread id = %hu\n", runningThread->tid);
 	printf("entering context switch\n");
-
-	if(next_thread){
-		printf("temp exists\n");
-	}
 	
 	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
 	 //Switch the running thread
@@ -88,8 +103,7 @@ int uthread_create(uthread_func_t func, void *arg)
 			printf("space allocated in main\n");
 			uthread_ctx_switch(c_main, c_main);
 			*runningThread = (struct TCB){0, s_main, c_main, RUNNING, -1};
-			
-			printf("running thread assigned\n");
+
 			readyQueue = queue_create();
 			blockedQueue = queue_create();
 			tcbArray[tid_count]= runningThread;
@@ -103,7 +117,6 @@ int uthread_create(uthread_func_t func, void *arg)
 		queue_enqueue(readyQueue, t);
 		tcbArray[tid_count]= t;
 		tid_count++;
-		printf("accessing t?\n");
 		return t->tid;
 	
 	}
@@ -122,14 +135,16 @@ void uthread_exit(int retval)
 	uthread_t runningThreadTid = runningThread->tid;
 
 	if (queue_length(readyQueue)>0){
+		printf("switching to ready thread \n");
 		queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
-		(*runningThread) = (*next_thread); //Switch the running thread
-		uthread_ctx_switch((tcbArray[runningThreadTid]->context), next_thread->context); //Switch the contexts
+		runningThread = next_thread; //Switch the running thread
+		uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context); //Switch the contexts
 		
 	}
 	else{
-		(*runningThread) = *tcbArray[0]; 
-		uthread_ctx_switch((tcbArray[runningThreadTid]->context), (tcbArray[0])->context);
+		printf("No more ready threads to switch to\n");
+		runningThread = tcbArray[0]; 
+		uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context);
 	}
 	
 }
@@ -153,6 +168,7 @@ int uthread_join(uthread_t tid, int *retval)
 
  	while(1 == 1){
  		if (queue_length(readyQueue) == 0){
+ 			printf("Ready to break out\n");
  			break;
  		}
  		else{
