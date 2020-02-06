@@ -83,6 +83,8 @@ int uthread_create(uthread_func_t func, void *arg)
 
 		
 		if(tid_count == 0){
+			preempt_start();
+			printf("After preempt\n");
 			uthread_ctx_t* c_main = (uthread_ctx_t*)malloc(sizeof(uthread_ctx_t));
 			void* s_main = uthread_ctx_alloc_stack();
 			runningThread = (struct TCB*) malloc (sizeof(struct TCB));
@@ -165,6 +167,7 @@ int uthread_join(uthread_t tid, int *retval)
 	uthread_ctx_destroy_stack(tcbArray[tid]->stack);
 	free(tcbArray[tid]);
 	tcbArray[tid]= NULL;
+	printf("process finishes\n");
 
 
  	return 0;

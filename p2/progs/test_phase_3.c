@@ -68,6 +68,13 @@ int yieldWithOnlyOneThread(void* arg){
 	return -1;
 }
 
+int while_thread(void* arg){
+	while(1){
+		printf("looping\n");
+	}
+	return 0;
+}
+
 int main(void)
 {
 
@@ -110,6 +117,10 @@ int main(void)
 	retval = 0;
 	uthread_join(tid_2, &retval);
 	assert(retval == -1);
+
+	tid_2 = uthread_create(while_thread, NULL);
+	uthread_join(tid_2, &retval);
+	
 
 	printf("Passes tests\n");
 
