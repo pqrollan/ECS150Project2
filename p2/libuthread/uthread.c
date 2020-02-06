@@ -130,8 +130,14 @@ void uthread_exit(int retval)
 		
 	}
 	else{
-		runningThread = tcbArray[0]; 
-		uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context);
+		if (runningThread->tid==0){
+ 			queue_destroy(readyQueue);
+		}
+		else{
+			runningThread = tcbArray[0]; 
+			uthread_ctx_switch(tcbArray[runningThreadTid]->context, runningThread->context);
+		}
+		
 	}
 	
 }
@@ -155,10 +161,11 @@ int uthread_join(uthread_t tid, int *retval)
  	*/
 	
  	/* TODO Phase 3 */
-	if (tid == 0){
+	if (tid == 0 || tid == runningThread->tid ||
+		tcbArray[tid] == NULL || tcbArray[tid]->dependent!=0){
 		return -1;
 	}
-
+	
 	if (tcbArray[tid]->state!= ZOMBIE){
 		tcbArray[tid]->dependent= runningThread->tid;
 		uthread_join_yield();
@@ -171,12 +178,7 @@ int uthread_join(uthread_t tid, int *retval)
 	free(tcbArray[tid]->context);
 	uthread_ctx_destroy_stack(tcbArray[tid]->stack);
 	free(tcbArray[tid]);
-
-	if (runningThread->tid==0){
- 		queue_destroy(readyQueue);
-	}
- 	
-
+	tcbArray[tid]= NULL;
 
 
 	/* 	PHASE 2*/
