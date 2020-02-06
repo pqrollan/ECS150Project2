@@ -48,11 +48,13 @@ void uthread_yield(void)
 
 	if (runningThread){
 		printf("running thread is not null\n");
+		printf("Running thread id = %hu\n", runningThread->tid);
 	}
 	queue_enqueue(blockedQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
 	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
 	printf("enqueue dequeue success\n");
 	runningThread = next_thread;
+	printf("Running thread id = %hu\n", runningThread->tid);
 	printf("entering context switch\n");
 
 	if(next_thread){
@@ -98,7 +100,7 @@ int uthread_create(uthread_func_t func, void *arg)
 		uthread_ctx_init(c, s, func, arg);
 		struct TCB temp= {tid_count, s, c, READY, -1};
 		*t = temp;
-		queue_enqueue(readyQueue, &t);
+		queue_enqueue(readyQueue, t);
 		tcbArray[tid_count]= t;
 		tid_count++;
 		printf("accessing t?\n");
