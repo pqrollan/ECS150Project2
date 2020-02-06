@@ -34,14 +34,14 @@ CUR_PWD := $(shell pwd)
 CC	= gcc
 
 # General gcc options
-CFLAGS	:= -Wall -Werror
+CFLAGS	:= -Wall -Werror -g
 CFLAGS	+= -pipe
 ## Debug flag
 ifneq ($(D),1)
 CFLAGS	+= -O2
 else
 CFLAGS	+= -O0
-CFLAGS	+= -g
+# CFLAGS	+= -g
 endif
 
 # Include path
