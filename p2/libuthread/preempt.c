@@ -19,7 +19,7 @@
  */
 #define HZ 100
 
-
+//Respond to SIGVTALRM signals by yielding
 void handler(){
 	uthread_yield();
 	
@@ -27,7 +27,7 @@ void handler(){
 
 void preempt_disable(void)
 {
-	/* TODO Phase 4 */
+	//Unblock the SIGVTALRM signal
 	sigset_t mask;
 	sigemptyset(&mask);
 	sigaddset (&mask, SIGVTALRM);
@@ -36,7 +36,7 @@ void preempt_disable(void)
 
 void preempt_enable(void)
 {
-	/* TODO Phase 4 */
+	//Block the SIGVTALRM signal
 	sigset_t mask;
 	sigemptyset(&mask);
 	sigaddset (&mask, SIGVTALRM);
@@ -45,7 +45,8 @@ void preempt_enable(void)
 
 void preempt_start(void)
 {
-	/* TODO Phase 4 */
+	// Set a sigaction struct, add SIGVTALRM to its mask, and set its handler
+	// to handler().
 	struct sigaction sig_a;
 	struct itimerval timer;
 	sigset_t mask;
@@ -57,18 +58,12 @@ void preempt_start(void)
 	sig_a.sa_handler = &handler;
 	sigaction(SIGVTALRM, &sig_a, NULL);
 
+	//Set a virtual interval timer that fires a SIGVTALRM signal every 10000 microseconds. 
 	timer.it_value.tv_sec = 0;
-	timer.it_value.tv_usec = 10000; //10000
+	timer.it_value.tv_usec = 10000;
 	timer.it_interval.tv_sec = 0;
 	timer.it_interval.tv_usec = 10000;
 	setitimer(ITIMER_VIRTUAL, &timer, NULL);
-	/*
-	sigset_t mask;
-	sigprocmask(0, NULL, &mask);
-	sigdelset(&mask, SIGVTALRM);
-	sigsuspend(&mask);
-	*/
- 	//while	(1);
 	
 }
 

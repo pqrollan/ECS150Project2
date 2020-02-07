@@ -4,7 +4,7 @@ programs := \
 	uthread_hello.x \
 	uthread_yield.x \
 	test_queue.x \
-	test_phase_3.x
+	test_preempt.x
 
 ## *** IMPORTANT *** ##
 ##	You should NOT have to modify anything below

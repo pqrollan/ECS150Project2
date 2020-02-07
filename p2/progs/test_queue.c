@@ -21,22 +21,47 @@ void test_queue_simple(void)
 
     q = queue_create();
     queue_enqueue(q, &data);
-    queue_length(q);
     queue_dequeue(q, (void**)&ptr);
-    queue_length(q);
     assert(queue_length(q) == 0);
     assert(ptr == &data);
 }
 
-//Tests queue_destroy
-void test_queue_destroy(){
-	queue_t q;
-	q = queue_create();
-	int i = queue_destroy(q);
+//Tests whether a queue pointer can be created and destroyed multiple times
+void test_multi_create_destroy(void)
+{
+    queue_t q;
 
-	assert(i == 0);
+    q = queue_create();
+    assert(q != NULL);
+    queue_destroy(q);
+
+    q = queue_create();
+    assert(q != NULL);
+    queue_destroy(q);
+	assert(queue_length(q) == 0);
 }
 
+//Ensure that a null queue can't be destroyed
+void test_destroy_NULL(void)
+{
+    queue_t q = NULL;
+
+    int i = queue_destroy(q);
+	assert(i == -1);
+}
+
+//Ensure that a populated queue can't be destroyed
+void test_destroy_filled(void)
+{
+    queue_t q = NULL;
+    int dataValid = 2;
+    q = queue_create();
+    queue_enqueue(q, &dataValid);
+    int i = queue_destroy(q);
+	assert(i == -1);
+}
+
+//Perform a series of enqueues and dequeues, and ensure that the height is correct
 void test_height_dequeue_test(void){
 	queue_t q;
     int data = 3, *ptr;
@@ -56,6 +81,7 @@ void test_height_dequeue_test(void){
     assert(queue_length(q) == 2);
 }
 
+//Ensure that after multiple enqueues and deletes, the height is correct
 void test_height_delete_test(void){
     queue_t q;
     int data = 3;
@@ -76,8 +102,27 @@ void test_height_delete_test(void){
     assert(queue_length(q) == 2);
 }
 
-
+//Tests that deletes returns the correct value and removes the element from the queue
 void test_simple_delete(void)
+{
+    queue_t q;
+    int dataValid = 2;
+
+
+    q = queue_create();
+    queue_enqueue(q, &dataValid);
+    queue_delete(q,&dataValid);
+    /*
+        testing that 1 was deleted and that there exists no other datavalid
+    */
+    assert(queue_length(q) == 0);
+    assert(queue_delete(q,&dataValid)==-1);
+    assert(queue_length(q) == 0);
+
+}
+
+//Test multiple deletes
+void test_embedded_delete(void)
 {
     queue_t q;
     int data = 3;
@@ -104,6 +149,7 @@ void test_simple_delete(void)
 
 }
 
+//Tests that first element can be deleted successfully
 void test_delete_first_element(void){
     queue_t q;
     int dataValid = 3;
@@ -127,7 +173,7 @@ void test_delete_first_element(void){
     //Test whether data is still in the queue.
 }
 
-
+//Ensures that last element can be deleted successfully
 void test_delete_last_element(void){
     queue_t q;
     int dataValid = 3;
@@ -172,6 +218,7 @@ static int find_item(void *data, void *arg)
     return 0;
 }
 
+//Ensure that the iterate function is applied to eachelement of the queue
 void test_iterator(void)
 {
     queue_t q;
@@ -187,7 +234,7 @@ void test_iterator(void)
     /* Add value '1' to every item of the queue */
     queue_iterate(q, inc_item, (void*)1, NULL);
     assert(data[0] == 2);
-
+    
     /* Find and get the item which is equal to value '5' */
     ptr = NULL;
     queue_iterate(q, find_item, (void*)5, (void**)&ptr);
@@ -196,6 +243,34 @@ void test_iterator(void)
     assert(ptr == &data[3]);
 }
 
+// Ensure that after delete alters elements of the queue, they can be iterated through successfully
+void test_iterator_with_delete(void)
+{
+    queue_t q;
+    int data[] = {1, 2, 1, 2, 1};
+    int i;
+    int *ptr;
+
+    /* Initialize the queue and enqueue items */
+    q = queue_create();
+    for (i = 0; i < (int)(sizeof(data) / sizeof(data[0])); i++)
+        queue_enqueue(q, &data[i]);
+
+    /* Add value '1' to every item of the queue */
+    queue_iterate(q, find_item, (void*)2, (void**)&ptr);
+    assert(ptr != NULL);
+    assert(*ptr == 2);
+    queue_delete(q, &data[2]);
+
+    queue_iterate(q, find_item, (void*)2, (void**)&ptr);
+    assert(ptr != NULL);
+    assert(*ptr == 2);
+    queue_delete(q, &data[2]);
+
+    assert(queue_delete(q, &data[2])==-1);
+}
+
+//Test to enqueue to a null queue, fails successfully
 void test_enqueue_nullqueue(void)
 {
     queue_t q;
@@ -204,6 +279,7 @@ void test_enqueue_nullqueue(void)
     assert(queue_enqueue(q, &data)==-1);
 }
 
+//Test to enqueue to a null element to a queue, fails successfully
 void test_enqueue_nodata(void)
 {
     queue_t q;
@@ -213,6 +289,7 @@ void test_enqueue_nodata(void)
     assert(queue_enqueue(q, data)==-1);
 }
 
+//Test to dequeue to a null queue, fails successfully
 void test_dequeue_nullqueue(void)
 {
     queue_t q;
@@ -222,22 +299,22 @@ void test_dequeue_nullqueue(void)
     assert(queue_dequeue(q, (void**) &data_ptr)==-1);
 }
 
+//Test to dequeue without a pointer to assign it's data to
 void test_dequeue_nodata(void)
 {
     queue_t q;
     int data = 3;
-
     q = queue_create();
     queue_enqueue(q, &data);
     assert(queue_dequeue(q, NULL)==-1);
 }
 
+//Ensure that an empty queue can't be dequeued
 void test_dequeue_emptyqueue(void)
 {
     queue_t q;
     int data = 3;
     int* data_ptr = &data;
-
     q = queue_create();
     assert(queue_dequeue(q, (void**) &data_ptr)==-1);
 }
@@ -246,15 +323,22 @@ void test_dequeue_emptyqueue(void)
 
 int main(){
 	test_create();
+    test_multi_create_destroy();
+
+    test_destroy_NULL();
+    test_destroy_filled();
+
 	test_queue_simple();
-	//test_queue_destroy();
 	test_height_dequeue_test();
     test_height_delete_test();
 
     test_simple_delete();
+    test_embedded_delete();
     test_delete_first_element();
     test_delete_last_element();
+
     test_iterator();
+    test_iterator_with_delete();
 
     test_enqueue_nullqueue();
     test_enqueue_nodata();

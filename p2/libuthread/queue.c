@@ -5,14 +5,21 @@
 
 #include "queue.h"
 
+/*
+	Struct representing an element of a queue. 
+	Contains data and pointers to the previous and next nodes
+*/
 struct node {
 	void* data;
 	struct node* prev;
 	struct node* next;
 };
 
+/*
+	Struct representing a queue. A queue is implemented as a doubly linked list.
+	A queue has pointers to its first and last elements, and stores its height
+*/
 struct queue {
-	/* TODO Phase 1 */
 	struct node* first;
 	struct node* last;
 	int height;
@@ -20,15 +27,16 @@ struct queue {
 
 
 
-//Does the result of queue_create count as an empty queue?
+
 queue_t queue_create(void)
 {
-	//printf("making space\n");
-	queue_t q =  (queue_t)malloc(sizeof(struct queue));
-	q->height = 0;
-	q->first = NULL;
-	q->last = NULL;
-	//printf("new queue created\n");
+	//If the queue was successfully allocated, populate its fields.
+	queue_t q =  (queue_t)malloc(sizeof(struct queue)); 
+	if(q != NULL){
+		q->height = 0;
+		q->first = NULL;
+		q->last = NULL;
+	}
 	return q;
 }
 
@@ -36,7 +44,7 @@ int queue_destroy(queue_t queue){
 	if (queue == NULL || queue_length(queue) > 0){
 		return -1;
 	}
-	free(queue);
+	free(queue); //Deallocate the queue
 	queue = NULL;
 	return 0;
 }
@@ -48,17 +56,19 @@ int queue_enqueue(queue_t queue, void *data)
 		return -1;
 	}
 	
-	struct node* temp = (struct node*) malloc(sizeof(struct node));
-	temp->data = data;
-	temp->prev = queue->last;
-	temp->next = NULL;
-	queue->last = temp;
+	struct node* new_node = (struct node*) malloc(sizeof(struct node)); //Allocate space for the new node
+	new_node->data = data; 
+	//Link the new node to the end of the queue
+	new_node->prev = queue->last;
+	new_node->next = NULL;
+	queue->last = new_node;
 	queue->height = queue->height+ 1;
+	//If the queue has one element, the new node will be its first node. Otherwise link the end of the queue to the new node.
 	if (queue->height == 1){
-		queue->first = temp;
+		queue->first = new_node;
 	}
 	else{
-		temp->prev->next = temp;
+		new_node->prev->next = new_node;
 	}
 	
 	return 0;
@@ -70,12 +80,14 @@ int queue_dequeue(queue_t queue, void **data)
 	if (queue == NULL || data == NULL || queue->height == 0){
 		return -1;
 	}
-	
-	struct node* temp = queue->first;
-	*data = temp->data;
-	queue->first = temp->next;
+
+	struct node* dequeued_node = queue->first;
+	*data = dequeued_node->data; //Extract the dequeued node's data
+	//Unlink the node from the queue
+	queue->first = dequeued_node->next;
 	queue->height = queue->height -1;
 
+	//If the queue is not empty, the first element's previous node will be null. Else, if the queue is empty, set its last element to null.
 	if (queue->height > 0){
 		queue->first->prev = NULL;
 	}
@@ -92,27 +104,29 @@ int queue_delete(queue_t queue, void *data)
 	if (queue == NULL || data == NULL || queue_length(queue) == 0){
 		return -1;
 	}
-	struct node* temp= queue->first;
+	struct node* deleted_node= queue->first;
 
+	//Iterate through the queue searching for the desired node.
 	for (int i = 0; i < queue_length(queue); i++){ 
-		if (temp->data == data){
+		if (deleted_node->data == data){
+			//If the desired node is found, unlink it from the queue.
 			if(i!=0){
-				temp->prev->next = temp->next;
+				deleted_node->prev->next = deleted_node->next;
 			}
 			else{
-				queue->first= temp->next;
+				queue->first= deleted_node->next;
 			}
 			if ((i+1) != queue_length(queue)){
-				temp->next->prev = temp->prev;
+				deleted_node->next->prev = deleted_node->prev;
 			}
 			else{
-				queue->last= temp->prev;
+				queue->last= deleted_node->prev;
 			}
 			queue->height--;
-			free (temp);
+			free (deleted_node); //Free the deleted node once unlinked and return
 			return 0;
 		}
-		temp=temp->next;
+		deleted_node=deleted_node->next;
 	}
 	return -1;
 	
@@ -124,16 +138,17 @@ int queue_iterate(queue_t queue, queue_func_t func, void *arg, void **data)
 		return -1;
 	}
 
-	struct node* temp = queue->first;
+	//Iterate through the queue, calling the function on every element. Collect the return value. If it is 1, return from the function.
+	struct node* cur_node = queue->first;
 	for (int i = 0; i < queue_length(queue); i++){ 
-		int returned = func(temp->data, arg);
+		int returned = func(cur_node->data, arg);
 		if (returned == 1){
 			if (data != NULL){
-				*data = temp->data;
+				*data = cur_node->data;
 			}
 			break;
 		}
-		temp=temp->next;
+		cur_node = cur_node->next;
 	}
 	return 0;
 }
