@@ -74,19 +74,39 @@ int yieldWithOnlyOneThread(void* arg){
 	return -1;
 }
 
-int while_thread(void* arg){
-	while(1);
+/*
+	testing the preempt signal
+*/
+int* while_global_condition = NULL;
 
-	printf("WHILE LOOP FINISHES\n");
+
+int while_thread(void* arg){
+	while (*while_global_condition != 1){
+		while_global_condition = while_global_condition;
+		printf("GC = %d\n", *while_global_condition);
+	}
+
+	printf("end of while\n");
+	return 0;
+}
+
+int while_end_thread(void * arg){
+	printf("reached tier 2\n");
+	*while_global_condition = 1;
 	return 0;
 }
 
 int main(void)
 {
+	while_global_condition= (int*) malloc(sizeof(int));
+	*while_global_condition = 0;
 
 	uthread_t tid_2 = uthread_create(while_thread, NULL);
-	uthread_t tid_1 = uthread_create(f, NULL);
-	uthread_join(tid_2, NULL);
+	uthread_t tid_1 = uthread_create(while_end_thread, NULL);
+	int retval = 0;
+	uthread_join(tid_2, &retval);
+	assert(retval == 0);
+
 
 	tid_2 = uthread_create(f, NULL);
 	uthread_join(tid_1, NULL);
@@ -101,7 +121,7 @@ int main(void)
 	uthread_join(tid_2, NULL);
 
 	tid_1 = uthread_create(join_main, NULL);
-	int retval = 0;
+	retval = 0;
 	uthread_join(tid_1, &retval);
 	assert(retval == -2);
 

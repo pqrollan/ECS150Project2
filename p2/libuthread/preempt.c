@@ -21,7 +21,6 @@
 
 
 void handler(){
-	printf("handler ----------------------------------------- fired\n");
 	uthread_yield();
 	
 }
@@ -46,10 +45,7 @@ void preempt_enable(void)
 
 void preempt_start(void)
 {
-	printf("Inside preempt\n");
 	/* TODO Phase 4 */
-
-
 	struct sigaction sig_a;
 	struct itimerval timer;
 	sigset_t mask;
