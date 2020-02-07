@@ -46,10 +46,11 @@ void uthread_yield(void)
 	struct TCB* next_thread = (struct TCB*) malloc (sizeof(struct TCB));
 	//struct TCB* curr_context = (struct TCB*) malloc (sizeof(struct TCB));
 	uthread_t runningThreadTid = runningThread->tid;
-
+	printf("tid from %hu\n", runningThreadTid);
 	queue_enqueue(readyQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
 	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
-	runningThread = next_thread;	
+	runningThread = next_thread;
+	printf("tid to %hu\n", runningThread->tid);	
 	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
 	 //Switch the running thread
 }
@@ -83,7 +84,7 @@ int uthread_create(uthread_func_t func, void *arg)
 
 		
 		if(tid_count == 0){
-			preempt_start();
+
 			printf("After preempt\n");
 			uthread_ctx_t* c_main = (uthread_ctx_t*)malloc(sizeof(uthread_ctx_t));
 			void* s_main = uthread_ctx_alloc_stack();
@@ -95,6 +96,8 @@ int uthread_create(uthread_func_t func, void *arg)
 			blockedQueue = queue_create();
 			tcbArray[tid_count]= runningThread;
 			tid_count++;
+			preempt_start();
+			preempt_enable();
 		}
 		uthread_ctx_init(c, s, func, arg);
 		struct TCB temp= {tid_count, s, c, READY, -1, 0};

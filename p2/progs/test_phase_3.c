@@ -76,9 +76,8 @@ int yieldWithOnlyOneThread(void* arg){
 
 int while_thread(void* arg){
 	int i =0;
-	while(i < 10000){
+	while(i == 0){
 		printf("looping %d\n",i);
-		i++;
 	}
 	return 0;
 }
