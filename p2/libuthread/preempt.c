@@ -47,20 +47,14 @@ void preempt_start(void)
 	sa.sa_handler = &handler;
 	preempt_enable();
 
-	if (sigaction(SIGVTALRM, &sa, NULL)==-1){
-		printf("error with sig action");
-	}
+	sigaction(SIGVTALRM, &sa, NULL);
+	
 
 	timer.it_value.tv_sec = 0;
 	timer.it_value.tv_usec = 10000; //10000
 	timer.it_interval.tv_sec = 0;
 	timer.it_interval.tv_usec = 10000;
-	if( setitimer(ITIMER_VIRTUAL, &timer, NULL) < 0){
-		printf("Don't have a timer\n");
-	}
-
-	
-
+	setitimer(ITIMER_VIRTUAL, &timer, NULL);
 }
 
 

@@ -1,18 +1,4 @@
-/*
-	create
-	create
-	join
-	join
 
-	create 
-	join
-	create
-	join
-
-
-	create 
-	whatever you create joins main
-*/
 
 /*
  * Simple hello world test
@@ -32,6 +18,26 @@ int f(void* arg)
 	printf("thread%d\n", uthread_self());
 	return 0;
 }
+
+int chain_test2(void* arg)
+{
+	uthread_t temp = uthread_create(f, NULL);
+	int retval = 10;
+	uthread_join(temp,&retval);
+	printf("return value is: %d\n", retval);
+	return -3;
+}
+
+int chain_test1(void* arg)
+{
+	uthread_t temp = uthread_create(chain_test2, NULL);
+	int retval = 10;
+	uthread_join(temp,&retval);
+	printf("return value is: %d\n", retval);
+	return -5;
+}
+
+
 
 int join_main(void* arg)
 {
@@ -70,7 +76,7 @@ int yieldWithOnlyOneThread(void* arg){
 
 int while_thread(void* arg){
 	int i =0;
-	while(i < 2000){
+	while(i < 10000){
 		printf("looping %d\n",i);
 		i++;
 	}
@@ -120,7 +126,13 @@ int main(void)
 	uthread_join(tid_2, &retval);
 	assert(retval == -1);
 
-
+	printf("\n\nmulti join test: \n");
+	retval = 0;
+	tid_0 = uthread_create(chain_test1, NULL);
+	uthread_join(tid_0, &retval);
+	printf("final t0 retval is: %d\n", retval);
+	
+	
 	tid_2 = uthread_create(while_thread, NULL);
 	uthread_join(tid_2, &retval);
 	
