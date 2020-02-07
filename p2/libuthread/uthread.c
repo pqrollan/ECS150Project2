@@ -48,14 +48,12 @@ void uthread_yield(void)
 	preempt_enable();
 	//struct TCB* curr_context = (struct TCB*) malloc (sizeof(struct TCB));
 	uthread_t runningThreadTid = runningThread->tid;
-	printf("tid from %hu\n", runningThreadTid);
 
 	preempt_disable();
 	queue_enqueue(readyQueue, (void *)tcbArray[runningThreadTid]); //Enqueue the running thread to the ready queue
 	queue_dequeue(readyQueue, (void**) &next_thread); //Get the next thread ready to run
 	runningThread = next_thread;
-	preempt_enable();
-	printf("tid to %hu\n", runningThread->tid);	
+	preempt_enable();	
 	uthread_ctx_switch((tcbArray[runningThreadTid]->context), (runningThread->context)); //Switch the contexts
 	 //Switch the running thread
 }

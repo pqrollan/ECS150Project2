@@ -75,19 +75,20 @@ int yieldWithOnlyOneThread(void* arg){
 }
 
 int while_thread(void* arg){
-	long int i =0;
-	while(i < 10000000){
-		printf("looping %ld\n",i);
-		i++;
-	}
+	while(1);
+
+	printf("WHILE LOOP FINISHES\n");
 	return 0;
 }
 
 int main(void)
 {
 
+	uthread_t tid_2 = uthread_create(while_thread, NULL);
 	uthread_t tid_1 = uthread_create(f, NULL);
-	uthread_t tid_2 = uthread_create(f, NULL);
+	uthread_join(tid_2, NULL);
+
+	tid_2 = uthread_create(f, NULL);
 	uthread_join(tid_1, NULL);
 	printf("join 1 complete, join 2 initiated\n");
 	uthread_join(tid_2, NULL);
@@ -133,8 +134,6 @@ int main(void)
 	printf("final t0 retval is: %d\n", retval);
 	
 	
-	//tid_2 = uthread_create(while_thread, NULL);
-	//uthread_join(tid_2, &retval);
 	
 
 	printf("Passes tests\n");
