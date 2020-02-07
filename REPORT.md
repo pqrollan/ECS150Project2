@@ -56,6 +56,20 @@ When the main thread is created, these queues are allocated and initialized.
 All resources associated with a TCB are freed when a thread joins it and the
 thread has gotten a chance to run and give the joining thread its return value.
 
+The distinction between uthread_join_yield and uthread_yield allowed us to have
+a function which passed the previously running thread back into the ready
+queue, which was the case for uthread_yield, as well as a function which could
+pass the previously running thread into a blocked queue.
+
+The uthread_exit function satisfies the purpose of unblocking dependent
+threads. By accessing the dependent threads using our TCB array, we could get
+the correct tcb and appropriately move it to the ready queue and delete it from
+the blocked queue. We also made sure that if the TID == 0, meaning the main
+was about to close, we would free any data we could.
+
+Uthread_join was a prime example of checking a certain thread in our array for
+the proper state enum, in this case Zombie. This allowed us to quickly see if we
+should collect the return value of our joined thread.
 
 Uthread was tested using the professor’s two examples, as well as with many of
 our own test cases. Print statements track the threads’ execution, ensuring
@@ -73,7 +87,10 @@ Preemption can be disabled by blocking the SIGVTALRM signals with the
 preempt_disable() function, preventing the yield from occurring. Preemption was
 enabled or disabled in uthread.c before any global variables were accessed or
 data when data was allocated or freed. This ensures that changes to shared data
-structures were never compromised by unexpected context switches.
+structures were never compromised by unexpected context switches. We can
+preempt_start() in the creation of the main thread. This makes sure that there
+is only one timer ever initiated and that every time any file attempts to
+create a thread we will ALWAYS succeed in having a timer for it.
 
 We tested preemption by proving that an uncooperative thread will be forcefully
 yielded to a ready thread. To do this, from the main we created two threads.
@@ -84,7 +101,7 @@ in an infinite loop until thread 2 changes the value of the global variable.
 Preempt will eventually be called, forcefully yielding thread 1 into thread 2
 (the next available thread). Thread 2 finally sets the global variable to 1,
 exits, and allows the program to go back to thread 1. Thread 1 now has the
-value it needs! We discovered that thread 1l used an old, probably cashed,
+value it needs! We discovered that thread 1 used an old, probably cashed,
 version of the global variable, and remained stuck in the loop despite thread 2
 executing and printing proof. To work around this, we printed the variable in
 the while loop causing thread 1 to see when the variable was updated. Our test
