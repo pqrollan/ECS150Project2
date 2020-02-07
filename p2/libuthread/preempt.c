@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -16,10 +17,8 @@
  */
 #define HZ 100
 
-struct sigaction sig_a;
-struct itimerval timer;
 
-static void handler(){
+void handler(){
 	printf("handler ----------------------------------------- fired\n");
 	uthread_yield();
 	
@@ -28,16 +27,19 @@ static void handler(){
 void preempt_disable(void)
 {
 	/* TODO Phase 4 */
-	sigaddset (&sig_a.sa_mask, SIGVTALRM);
-	sigprocmask (SIG_BLOCK, &sig_a.sa_mask, NULL);
+	sigset_t mask;
+	sigemptyset(&mask);
+	sigaddset (&mask, SIGVTALRM);
+	sigprocmask (SIG_BLOCK, &mask, NULL);
 }
 
 void preempt_enable(void)
 {
 	/* TODO Phase 4 */
-	
-	sigaddset (&sig_a.sa_mask, SIGVTALRM);
-	sigprocmask (SIG_UNBLOCK, &sig_a.sa_mask, NULL);
+	sigset_t mask;
+	sigemptyset(&mask);
+	sigaddset (&mask, SIGVTALRM);
+	sigprocmask (SIG_UNBLOCK, &mask, NULL);
 }
 
 void preempt_start(void)
@@ -45,12 +47,17 @@ void preempt_start(void)
 	printf("Inside preempt\n");
 	/* TODO Phase 4 */
 
-	sig_a.sa_flags = 0;
-	sig_a.sa_handler = handler;
-	sigemptyset(&sig_a.sa_mask);
 
+	struct sigaction sig_a;
+	struct itimerval timer;
+	sigset_t mask;
+
+	sigemptyset(&mask);
+	sigaddset (&mask, SIGVTALRM);
+
+	memset(&sig_a, 0, sizeof(sig_a));
+	sig_a.sa_handler = &handler;
 	sigaction(SIGVTALRM, &sig_a, NULL);
-	preempt_enable();
 
 	timer.it_value.tv_sec = 0;
 	timer.it_value.tv_usec = 10000; //10000
@@ -63,7 +70,7 @@ void preempt_start(void)
 	sigdelset(&mask, SIGVTALRM);
 	sigsuspend(&mask);
 	*/
-	//while(1);
+ 	while	(1);
 	
 }
 

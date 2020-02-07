@@ -16,7 +16,6 @@ void test_create(void)
 //Tests enqueue and dequeue
 void test_queue_simple(void)
 {
-	printf("Test queue simple\n");
     queue_t q;
     int data = 3, *ptr;
 
@@ -39,7 +38,6 @@ void test_queue_destroy(){
 }
 
 void test_height_dequeue_test(void){
-	printf(" \n \n \n Test dequeue height\n \n \n");
 	queue_t q;
     int data = 3, *ptr;
 
@@ -59,7 +57,6 @@ void test_height_dequeue_test(void){
 }
 
 void test_height_delete_test(void){
-    printf(" \n \n \n Test delete height\n");
     queue_t q;
     int data = 3;
 
@@ -82,7 +79,6 @@ void test_height_delete_test(void){
 
 void test_simple_delete(void)
 {
-    printf("Test delete simple\n");
     queue_t q;
     int data = 3;
     int dataValid = 2;
@@ -109,7 +105,6 @@ void test_simple_delete(void)
 }
 
 void test_delete_first_element(void){
-    printf("Test delete first element\n");
     queue_t q;
     int dataValid = 3;
     int data = 2, *ptr;
@@ -125,14 +120,15 @@ void test_delete_first_element(void){
     assert(queue_delete(q,&dataValid)==-1); //Test whether dataValid still exists in the queue
     
     queue_dequeue(q, (void**)&ptr);
-    assert(ptr == &data); //Test whether the remaining element is the correct one.
+    assert(ptr == &data); 
+    //Test whether the remaining element is the correct one.
 
-    assert(queue_delete(q, &data) == -1); //Test whether data is still in the queue.
+    assert(queue_delete(q, &data) == -1); 
+    //Test whether data is still in the queue.
 }
 
 
 void test_delete_last_element(void){
-    printf("Test delete last element\n");
     queue_t q;
     int dataValid = 3;
     int data = 2, *ptr;
@@ -200,10 +196,56 @@ void test_iterator(void)
     assert(ptr == &data[3]);
 }
 
+void test_enqueue_nullqueue(void)
+{
+    queue_t q;
+    int data = 3;
+    q = NULL;
+    assert(queue_enqueue(q, &data)==-1);
+}
+
+void test_enqueue_nodata(void)
+{
+    queue_t q;
+    int* data = NULL;
+
+    q = queue_create();
+    assert(queue_enqueue(q, data)==-1);
+}
+
+void test_dequeue_nullqueue(void)
+{
+    queue_t q;
+    int data = 3;
+    int* data_ptr = &data;
+    q = NULL;
+    assert(queue_dequeue(q, (void**) &data_ptr)==-1);
+}
+
+void test_dequeue_nodata(void)
+{
+    queue_t q;
+    int data = 3;
+
+    q = queue_create();
+    queue_enqueue(q, &data);
+    assert(queue_dequeue(q, NULL)==-1);
+}
+
+void test_dequeue_emptyqueue(void)
+{
+    queue_t q;
+    int data = 3;
+    int* data_ptr = &data;
+
+    q = queue_create();
+    assert(queue_dequeue(q, (void**) &data_ptr)==-1);
+}
+
 
 
 int main(){
-	//test_create();
+	test_create();
 	test_queue_simple();
 	//test_queue_destroy();
 	test_height_dequeue_test();
@@ -214,5 +256,11 @@ int main(){
     test_delete_last_element();
     test_iterator();
 
+    test_enqueue_nullqueue();
+    test_enqueue_nodata();
+
+    test_dequeue_nullqueue();
+    test_dequeue_nodata();
+    test_dequeue_emptyqueue();
 }
 
